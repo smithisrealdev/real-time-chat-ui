@@ -1,38 +1,48 @@
 import ChatContent from "./ChatContent/ChatContent";
 import ChatHeader from "./ChatHeader/ChatHeader";
 import ChatInputBox from "./ChatInputBox/ChatInputBox";
-import React from "react";
+import { useContext, useEffect } from "react";
+import { AppContext } from "../App";
+const mockClientData = {
+  id: 2221,
+  name: "James",
+  imageClient: "",
+  imageServer:
+    "https://cdn.icon-icons.com/icons2/1371/PNG/512/batman_90804.png",
+  type: "client",
+  messages: 0,
+};
+const mockServerData = {
+  id: 2222,
+  name: "Smith",
+  type: "server",
+  imageClient: "",
+  imageServer:
+    "https://cdn.icon-icons.com/icons2/1371/PNG/512/batman_90804.png",
+  messages: 0,
+};
 const ChatApp = () => {
-    React.useEffect(() => {
-        const socket = new WebSocket("ws://127.0.0.1:8080/ws");
-        console.log("Attempting Connection...");
-    
-        socket.onopen = () => {
-          console.log("Successfully Connected");
-          socket.send("Hi From the Client!");
-        };
-    
-        socket.onclose = event => {
-          console.log("Socket Closed Connection: ", event);
-          socket.send("Client Closed!");
-        };
-    
-        socket.onerror = error => {
-          console.log("Socket Error: ", error);
-        };
-        
-        // Cleanup the socket connection on unmount if necessary
-        return () => {
-          socket.close();
-        };
-    
-      }, []); 
+  const { setMsgData } = useContext(AppContext);
+  useEffect(() => {
+    setMsgData(localStorage.getItem("data"));
+  }, []);
   return (
-    <div className="max-w-sm mx-auto mt-32 ">
-      <div className="bg-white border border-gray-200 rounded-lg shadow relative">
-        <ChatHeader />
-        <ChatContent />
-        <ChatInputBox />
+    <div className="flex min-[320px]:flex-col gap-10 min-[320px]:max-w-sm mx-auto min-[320px]:mt-8">
+      <div>
+        <p className=" text-5xl text-red-500 font-bold mb-2">User 1</p>
+        <div className="bg-white border border-gray-200 rounded-lg shadow relative">
+          <ChatHeader account={mockClientData} />
+          <ChatContent account={mockClientData} />
+          <ChatInputBox dataUser={mockClientData} />
+        </div>
+      </div>
+      <div>
+        <p className=" text-5xl text-green-500 font-bold mb-2">User 2</p>
+        <div className="bg-white border border-gray-200 rounded-lg shadow relative">
+          <ChatHeader account={mockServerData} />
+          <ChatContent account={mockServerData} />
+          <ChatInputBox dataUser={mockClientData} />
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,11 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
-const DebouncedInput = () => {
+import React from "react"
+import PropTypes from "prop-types";
+const DebouncedInput = ({onChange,...props}) => {
+  const [value, setValue] = React.useState();
+  React.useEffect(() => {
+      onChange(value);
+    },[value]);
     return (
         <>
         <div className="relative w-full">
@@ -10,9 +16,9 @@ const DebouncedInput = () => {
             type="text"
             className="w-full block p-1.5 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
             id="message-box"
-            // {...props}
-            // value={value}
-            // onChange={(e) => setValue(e.target.value)}
+            {...props}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
           />
         </div>
       </>
@@ -20,3 +26,7 @@ const DebouncedInput = () => {
 }
 
 export default DebouncedInput;
+
+DebouncedInput.propTypes = {
+  onChange:  PropTypes.func.isRequired
+};
